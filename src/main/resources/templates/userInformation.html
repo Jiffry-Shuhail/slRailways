@@ -135,16 +135,10 @@
                     </div>
                     <div class="content">
                         <table class="ui borderless table">
-                            <th:block th:unless="${isUser}">
-                                <tr>
-                                    <td>Contact Number</td>
-                                    <td th:text="${booking.contact}"></td>
-                                </tr>
-                            </th:block>
-                            <th:block th:if="${isUser}">
+                            <th:block th:if="${isUser==true}">
                                 <tr>
                                     <td>FullName</td>
-                                    <td th:text="${booking.user.title+' . '+booking.user.fname+' '+booking.user.lname}"></td>
+                                    <td th:text="${booking.user.title+' '+booking.user.fname+' '+booking.user.lname}"></td>
                                 </tr>
 
                                 <th:block th:if="${booking.user.nic!=null}">
@@ -153,9 +147,9 @@
                                         <td th:text="${booking.user.nic}"></td>
                                     </tr>
                                 </th:block>
-                                <th:block th:if="${booking.user.passport!=null}">
+                                <th:block th:if="${booking.user.passport!=null && booking.user.passport!=''}">
                                     <tr>
-                                        <td>NIC</td>
+                                        <td>Passport</td>
                                         <td th:text="${booking.user.passport}"></td>
                                     </tr>
                                 </th:block>
@@ -170,6 +164,12 @@
                                     <td th:text="${booking.user.email}"></td>
                                 </tr>
 
+                            </th:block>
+                            <th:block th:unless="${isUser}">
+                                <tr>
+                                    <td>Contact Number</td>
+                                    <td th:text="${booking.contact}"></td>
+                                </tr>
                             </th:block>
                         </table>
                     </div>

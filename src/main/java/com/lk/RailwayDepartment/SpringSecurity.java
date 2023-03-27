@@ -45,6 +45,7 @@ public class SpringSecurity {
                                 .requestMatchers(HttpMethod.POST,"/reservation").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/paymentSummary").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/userInformation").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/ticketInformation").permitAll()
                                 .requestMatchers("/api").permitAll()
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/dashboard/**").hasAuthority("ADMIN")

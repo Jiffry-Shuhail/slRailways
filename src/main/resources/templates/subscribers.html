@@ -104,7 +104,7 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="user, iStat : ${SubscribersList}">
-                                            <td th:text="${user.title+'.'+user.fname+' '+user.lname}"></td>
+                                            <td th:text="${user.title+' '+user.fname+' '+user.lname}"></td>
                                             <td th:text="${user.nic!=null?user.nic:user.passport}"></td>
                                             <td th:text="${user.email}"></td>
                                             <td th:text="${user.contact}"></td>
