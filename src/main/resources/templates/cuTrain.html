@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Railway Department</title>
+    <link rel="icon" th:href="@{/trademark.png}">
+    <link th:href="@{/css/our.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/calendar.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic-ui-alerts.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div th:replace="../static/comman/navigation :: sideNav"></div>
+
+<div th:replace="../static/comman/navigation :: topNav"></div>
+
+<div class="pusher">
+    <div class="main-content">
+        <div class="ui grid stackable padded">
+            <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+                <div class="ui green segment">
+                    <div class="content">
+                        <div class="header">
+                            <div class="ui header">
+                                Save or Update Train
+                            </div>
+                        </div>
+                        <div class="description  block clear">
+                            <form class="ui form" method="POST" role="form" th:object="${train}">
+                                <h4 class="ui dividing header">Train Information</h4>
+                                <div class="field">
+                                    <div class="two fields">
+                                        <div class="field required" th:classappend="${#fields.hasErrors('name')}? error">
+                                            <label>Name</label>
+                                            <input th:field="*{name}" required name="name" placeholder="Name">
+                                            <div th:if="${#fields.hasErrors('name')}" class="ui basic red pointing prompt label transition visible"
+                                                 th:errorclass="error" th:errors="*{name}">
+                                                <p th:errors="*{name}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="field" th:classappend="${#fields.hasErrors('description')}? error">
+                                            <label>Description</label>
+                                            <input th:field="*{description}" name="description"
+                                                   placeholder="Description">
+                                            <div th:if="${#fields.hasErrors('description')}"
+                                                 class="ui basic red pointing prompt label transition visible">
+                                                <p th:errors="*{description}"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="ui dividing header">Location Information</h4>
+                                <div class="field">
+                                    <div class="two fields">
+                                        <div class="field required" th:classappend="${#fields.hasErrors('departure')}? error">
+                                            <label>Departure</label>
+                                            <select th:field="*{departure}" name="departure" required class="ui fluid search dropdown">
+                                                <option value="">Departure</option>
+                                                <option th:each="station : ${stations}" th:value="${station.id}"
+                                                        th:text="${station.name}"></option>
+                                            </select>
+                                            <div th:if="${#fields.hasErrors('departure')}"
+                                                 class="ui basic red pointing prompt label transition visible">
+                                                <p th:errors="*{departure}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="field required" th:classappend="${#fields.hasErrors('arrival')}? error">
+                                            <label>Arrival</label>
+                                            <select th:field="*{arrival}" name="arrival" required class="ui fluid search dropdown">
+                                                <option value="">Arrival</option>
+                                                <option th:each="station : ${stations}" th:value="${station.id}"
+                                                        th:text="${station.name}"></option>
+                                            </select>
+                                            <div th:if="${#fields.hasErrors('arrival')}"
+                                                 class="ui basic red pointing prompt label transition visible">
+                                                <p th:errors="*{arrival}"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="ui dividing header">Classes List</h4>
+
+                                <div class="field">
+                                    <div class="fields">
+                                        <div class="six wide field">
+                                            <label>Class</label>
+                                            <select id="classes" class="ui fluid search dropdown">
+                                                <option value="">Class</option>
+                                                <option th:each="classe : ${classes}" th:value="${classe.id}"
+                                                        th:text="${classe.name}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="four wide field">
+                                            <label>Seats</label>
+                                            <input id="seats" type="number" placeholder="Seats Count">
+                                        </div>
+
+                                        <div class="four wide field">
+                                            <label>Price</label>
+                                            <input id="price" type="number" placeholder="Price">
+                                        </div>
+
+                                        <div class="two wide field">
+                                            <label>&nbsp;</label>
+                                            <div class="ui animated fluid blue button" tabindex="0" id="addClasses">
+                                                <div class="visible content">Add</div>
+                                                <div class="hidden content">
+                                                    <i class="add icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field required">
+                                    <table class="ui unstackable celled padded scrolling striped table" id="classTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="six wide">Class</th>
+                                            <th class="four wide">Seats</th>
+                                            <th class="four wide">Price</th>
+                                            <th class="two wide">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="tc, iStat : *{trainHasClasses}">
+                                                <td>
+                                                    <input class="visible-non" th:field="*{trainHasClasses[__${iStat.index}__].trainClass}"/>
+                                                    <span  th:text="${tc.trainClass.name}"></span>
+                                                </td>
+                                                <td>
+                                                    <input class="visible-non" th:field="*{trainHasClasses[__${iStat.index}__].seats}"/>
+                                                    <span  th:text="${tc.seats}"></span>
+                                                </td>
+                                                <td>
+                                                    <input class="visible-non" th:field="*{trainHasClasses[__${iStat.index}__].price}"/>
+                                                    <span  th:text="${tc.price}"></span>
+                                                </td>
+                                                <td class="selectable removeClass middle center aligned negative hand-cursor">
+                                                    <i class="trash icon"></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div th:if="${#fields.hasErrors('trainHasClasses')}"
+                                         class="ui error visible message">
+                                        <p th:errors="*{trainHasClasses}"></p>
+                                    </div>
+                                </div>
+
+                                <h4 class="ui dividing header">Station List</h4>
+
+                                <div class="field">
+                                    <div class="fields">
+                                        <div class="seven wide field">
+                                            <label>Station</label>
+                                            <select id="station" class="ui fluid search dropdown">
+                                                <option value="">Departure</option>
+                                                <option th:each="station : ${stations}" th:value="${station.id}"
+                                                        th:text="${station.name}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="seven wide field">
+                                            <label>Duration</label>
+                                            <div class="ui calendar" id="date">
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    <input id="duration" type="text" placeholder="Duration">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="two wide field">
+                                            <label>&nbsp;</label>
+                                            <div class="ui animated fluid blue button" tabindex="0" id="add">
+                                                <div class="visible content">Add</div>
+                                                <div class="hidden content">
+                                                    <i class="add icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field required">
+                                    <table class="ui unstackable celled padded scrolling striped table" id="datatable">
+                                        <thead>
+                                        <tr>
+                                            <th class="seven wide">Station</th>
+                                            <th class="seven wide">Duration</th>
+                                            <th class="two wide">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="tc, iStat : *{stationsDurations}">
+                                            <td>
+                                                <input class="visible-non" th:field="*{stationsDurations[__${iStat.index}__].station}"/>
+                                                <span  th:text="${tc.station.name}"></span>
+                                            </td>
+                                            <td>
+                                                <input class="visible-non" th:field="*{stationsDurations[__${iStat.index}__].duration}"/>
+                                                <span  th:text="${#dates.format(new java.util.Date(tc.duration), 'HH:mm:ss')}"></span>
+                                            </td>
+                                            <td class="selectable remove middle center aligned pointing above negative hand-cursor">
+                                                <i class="trash icon"></i>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div th:if="${#fields.hasErrors('stationsDurations')}"
+                                         class="ui error visible message">
+                                        <p th:errors="*{stationsDurations}"></p>
+                                    </div>
+                                </div>
+
+                                <div class="ui divider"></div>
+                                <button type="submit" class="ui right floated positive button" tabindex="0">Submit
+                                </button>
+                                <div style="clear: both"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/calendar.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic-ui-alerts.js}"></script>
+<script type="text/javascript" th:src="@{/js/dashboard.js}"></script>
+<script type="text/javascript" th:src="@{/js/cuTrain.js}"></script>
+
+</body>
+</html>

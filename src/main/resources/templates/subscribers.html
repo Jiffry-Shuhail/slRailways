@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Railway Department</title>
+    <link rel="icon" th:href="@{/trademark.png}">
+    <link th:href="@{/css/our.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/calendar.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/dataTables.semanticui.min.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div th:replace="../static/comman/navigation :: sideNav"></div>
+
+<div th:replace="../static/comman/navigation :: topNav"></div>
+
+<div class="pusher">
+    <div class="main-content">
+        <div class="ui grid stackable padded">
+            <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+                <div class="ui green segment">
+                    <div class="content">
+                        <div class="header">
+                            <div class="ui header">
+                                Subscribers List
+                            </div>
+                        </div>
+                        <div class="description  block clear">
+                            <form class="ui form" action="/dashboard/subscribersList" method="post" role="form"
+                                  th:object="${SubscribersListFilter}" autocomplete="off">
+                                <h4 class="ui dividing header">Filtering Information</h4>
+                                <div class="field">
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>Role</label>
+                                            <select th:field="*{role}" name="train" id="train"
+                                                    class="ui fluid search dropdown">
+                                                <option value="">Role</option>
+                                                <option th:each="role : ${roles}" th:value="${role.id}"
+                                                        th:text="${role.name}"></option>
+                                            </select>
+                                        </div>
+
+                                        <div class="field">
+                                            <label>is Active</label>
+                                            <select th:field="*{active}" id="trainClass"
+                                                    class="ui fluid search dropdown">
+                                                <option value="true">Active</option>
+                                                <option value="false">De Active</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>From Date</label>
+                                            <div class="ui calendar" id="fromDateDiv">
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    <input th:field="*{fromDate}" type="text" placeholder="Duration" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label>To Date</label>
+                                            <div class="ui calendar" id="toDateDiv">
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    <input th:field="*{toDate}" type="text" placeholder="Duration" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="ui dividing header">Text Information</h4>
+                                <div class="field wide">
+                                    <label>Search</label>
+                                    <div class="ui icon input">
+                                        <input type="text" placeholder="Search" id="search">
+                                        <i class="search icon"></i>
+                                    </div>
+                                </div>
+
+
+                                <h4 class="ui dividing header">Filter List</h4>
+
+                                <div class="field">
+                                    <table class="ui unstackable celled padded scrolling striped table"
+                                           id="filterData" style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th class="four wide">Name</th>
+                                            <th class="two wide">Departure</th>
+                                            <th class="two wide">Email</th>
+                                            <th class="four wide">Contact</th>
+                                            <th class="three wide">Date</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="user, iStat : ${SubscribersList}">
+                                            <td th:text="${user.title+'.'+user.fname+' '+user.lname}"></td>
+                                            <td th:text="${user.nic!=null?user.nic:user.passport}"></td>
+                                            <td th:text="${user.email}"></td>
+                                            <td th:text="${user.contact}"></td>
+                                            <td th:text="${#dates.format(user.date, 'EEE, d MMM yyyy')}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="ui divider"></div>
+                                <button type="submit" class="ui right floated positive button" tabindex="0">Submit
+                                </button>
+                                <div style="clear: both"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/calendar.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/dataTables.semanticui.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/dashboard.js}"></script>
+<script type="text/javascript" th:src="@{/js/trainList.js}"></script>
+<script>
+    $('#train').dropdown({clearable: true});
+    $('#trainClass').dropdown({clearable: true});
+    $('.ui.calendar').calendar({type:'date'});
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    ...
+</head>
+<body>
+<div th:fragment="slider" th:class="'slide-item item'+${num}">
+    <div class="carousel-caption">
+        <img class="ui fluid image"
+             th:src="'/images/Slider/slide-'+${num}+'.jpg'"/>
+        <div class="ui grid middle aligned centered vertical-centered">
+            <div class="one mobile two tablet two computer column">
+                <i class="big train icon"></i>
+                <h1 class="sub1">Welcome to Sri Lanka Railways</h1>
+                <h6 class="sub2">Online Advance Train Seats Reservation</h6>
+                <br>
+                <a href="#search" class="ui inverted button button-slider">Book Your Seat</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="gallery" class="card">
+    <div class="image">
+        <img th:src="'/images/Gallery/gallery-'+${num}+'.jpg'">
+    </div>
+</div>
+
+<div th:fragment="services" th:class="'ui '+${service[3]}+' card'">
+    <div class="content">
+        <div class="header" th:text="${service[0]}"></div>
+    </div>
+    <div class="content" th:text="${service[1]}"></div>
+    <div class="extra content">
+        Available class types : <a th:text="${service[2]}"></a>
+    </div>
+</div>
+</body>
+</html>

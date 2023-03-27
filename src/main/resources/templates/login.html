@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Railway Department</title>
+    <link rel="icon" th:href="@{/trademark.png}">
+    <link th:href="@{/css/our.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="ui grid vh100 p0 m0">
+    <div class="sixteen wide  mobile twelve wide tablet twelve wide computer column p0">
+        <img class="ui fluid image image-login" th:src="@{/images/Slider/slide-1.jpg}">
+    </div>
+    <div class="sixteen wide  mobile four wide tablet four wide computer column container middle aligned">
+        <div class="ui middle center aligned">
+            <h1 class="ui header middle center aligned">Login</h1>
+        </div>
+        <div class="ui divider"></div>
+        <form class="ui form" method="post" role="form" th:action="@{/login}">
+            <div class="field required">
+                <label>Email Address</label>
+                <input id="username" name="username" required type="text"  placeholder="Email Address" pattern="^[\w\d._-]+@[\w\d.-]+\.[\w\d]{2,6}$">
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <div class="ui icon input">
+                    <input id="password" name="password" type="password" placeholder="Password"  pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,32}">
+                    <i class="low vision link icon"></i>
+                </div>
+            </div>
+
+            <div th:if="${param.error}">
+                <div class="ui message red">Invalid Email or Password</div>
+            </div>
+
+            <div class="field">
+                <button class="ui fluid violet button" type="submit">Login</button>
+            </div>
+            <div class="ui divider"></div>
+            <div class="ui middle center aligned">
+                <a class="middle center aligned" href="/signup">Create your Account</a>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic.min.js}"></script>
+
+<script>
+    $('i.link.icon').click((e)=>{
+        if($(e.target).closest('div.ui.icon.input').find('input').attr('type')==='password'){
+            $(e.target).removeClass('low vision').addClass('eye');
+            $(e.target).closest('div.ui.icon.input').find('input').attr('type', 'text');
+        }else{
+            $(e.target).removeClass('eye').addClass('low vision');
+            $(e.target).closest('div.ui.icon.input').find('input').attr('type', 'password');
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Railway Department</title>
+    <link rel="icon" th:href="@{/trademark.png}">
+    <link th:href="@{/css/our.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/calendar.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic-ui-alerts.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div th:replace="../static/comman/navigation :: sideNav"></div>
+
+<div th:replace="../static/comman/navigation :: topNav"></div>
+
+<div class="pusher">
+    <div class="main-content">
+        <div class="ui grid stackable padded">
+            <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+                <div class="ui green segment">
+                    <div class="content">
+                        <div class="header">
+                            <div class="ui header">
+                                Save or Update Train Schedule
+                            </div>
+                        </div>
+                        <div class="description  block clear">
+                            <form class="ui form" method="POST" role="form" th:object="${trainSchedule}" autocomplete="off">
+                                <h4 class="ui dividing header">Train Information</h4>
+                                <div class="field">
+                                    <div class="three fields">
+                                        <div class="field required"
+                                             th:classappend="${#fields.hasErrors('train')}? error">
+                                            <label>Train</label>
+                                            <select th:field="*{train}" name="train" required
+                                                    class="ui fluid search dropdown">
+                                                <option value="">Train</option>
+                                                <option th:each="train : ${trains}" th:value="${train.id}"
+                                                        th:text="${train.name}"></option>
+                                            </select>
+                                            <div th:if="${#fields.hasErrors('train')}"
+                                                 class="ui basic red pointing prompt label transition visible"
+                                                 th:errorclass="error" th:errors="*{train}">
+                                                <p th:errors="*{train}"></p>
+                                            </div>
+                                        </div>
+                                        <div class="field" th:classappend="${#fields.hasErrors('description')}? error">
+                                            <label>Description</label>
+                                            <input th:field="*{description}" name="description"
+                                                   placeholder="Description">
+                                            <div th:if="${#fields.hasErrors('description')}"
+                                                 class="ui basic red pointing prompt label transition visible">
+                                                <p th:errors="*{description}"></p>
+                                            </div>
+                                        </div>
+
+                                        <div class="field required"
+                                             th:classappend="${#fields.hasErrors('date')}? error">
+                                            <label>Duration</label>
+                                            <div class="ui calendar" id="mainDate">
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    <input th:field="*{date}" type="text" required placeholder="Duration">
+                                                </div>
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('date')}"
+                                                 class="ui basic red pointing prompt label transition visible">
+                                                <p th:errors="*{date}"></p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <h4 class="ui dividing header">Classes List</h4>
+
+                                <div class="field required">
+                                    <table class="ui unstackable celled padded scrolling striped table" id="classTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="six wide">Class</th>
+                                            <th class="four wide">Seats</th>
+                                            <th class="four wide">Price</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="tc, iStat : *{trainSeatPriceAndAvailabilities}">
+                                            <td>
+                                                <input class="visible-non"
+                                                       th:field="*{trainSeatPriceAndAvailabilities[__${iStat.index}__].trainClass}"/>
+                                                <span th:text="${tc.trainClass.name}"></span>
+                                            </td>
+                                            <td class="required">
+                                                <input required min="0" oninput="validity.valid||(value='');" type="number" th:field="*{trainSeatPriceAndAvailabilities[__${iStat.index}__].availability}"/>
+                                            </td>
+                                            <td class="required">
+                                                <input required min="0" oninput="validity.valid||(value='');" type="number" th:field="*{trainSeatPriceAndAvailabilities[__${iStat.index}__].price}"/>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div th:if="${#fields.hasErrors('trainSeatPriceAndAvailabilities')}"
+                                         class="ui error visible message">
+                                        <p th:errors="*{trainSeatPriceAndAvailabilities}"></p>
+                                    </div>
+                                </div>
+
+                                <h4 class="ui dividing header">Station List</h4>
+
+                                <div class="field required">
+                                    <table class="ui unstackable celled padded scrolling striped table" id="datatable">
+                                        <thead>
+                                        <tr>
+                                            <th class="seven wide">Station</th>
+                                            <th class="seven wide">Arrival</th>
+                                            <th class="seven wide">Departure</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="tc, iStat : *{trainDepartureArrivalTimeList}">
+                                            <td>
+                                                <input class="visible-non"
+                                                       th:field="*{trainDepartureArrivalTimeList[__${iStat.index}__].station}"/>
+                                                <span th:text="${tc.station.name}"></span>
+                                            </td>
+                                            <td>
+                                                <input class="visible-non" th:value="${tc.arrival}"/>
+                                                <div class="field required">
+                                                    <div class="ui calendar duration">
+                                                        <div class="ui input left icon">
+                                                            <i class="calendar icon"></i>
+                                                            <input required class="live"
+                                                                   th:field="*{trainDepartureArrivalTimeList[__${iStat.index}__].arrival}"
+                                                                   type="text" placeholder="Arrival"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input class="visible-non" th:value="${tc.departure}"/>
+                                                <div class="field required">
+                                                    <div class="ui calendar duration">
+                                                        <div class="ui input left icon">
+                                                            <i class="calendar icon"></i>
+                                                            <input required class="live"
+                                                                   th:field="*{trainDepartureArrivalTimeList[__${iStat.index}__].departure}"
+                                                                   type="text" placeholder="Departure"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div th:if="${#fields.hasErrors('trainDepartureArrivalTimeList')}"
+                                         class="ui error visible message">
+                                        <p th:errors="*{trainDepartureArrivalTimeList}"></p>
+                                    </div>
+                                </div>
+
+                                <div class="ui divider"></div>
+                                <button type="submit" class="ui right floated positive button" tabindex="0">Submit
+                                </button>
+                                <div style="clear: both"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/calendar.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic-ui-alerts.js}"></script>
+<script type="text/javascript" th:src="@{/js/dashboard.js}"></script>
+<script type="text/javascript" th:src="@{/js/moment-with-locales.js}"></script>
+<script type="text/javascript" th:src="@{/js/cuTrainSchedule.js}"></script>
+
+</body>
+</html>

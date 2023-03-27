@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Railway Department</title>
+    <link rel="icon" th:href="@{/trademark.png}">
+    <link th:href="@{/css/our.css}" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/intlTelInput.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/jeffry.in.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/jeffry.in.slider.css}">
+    <link th:href="@{/semantic/semantic.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/calendar.min.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="ui grid">
+    <div class="computer only row">
+        <div class="column">
+            <div class="ui secondary pointing top fixed menu navigation">
+                <div class="item">
+                    <img class="ui mini image" th:src="@{/trademark.png}">&nbsp;&nbsp;&nbsp;<span class="header">Sri Lanka Railways</span>
+                </div>
+                <a class="item right aligned active" href="#search">Home</a>
+                <a class="item" href="#gallery">Gallery</a>
+                <a class="item" href="#history">History</a>
+                <a class="item" href="#ourService">Over Services</a>
+                <a class="item" href="#content">Contact</a>
+                <a class="item" href="/api">API</a>
+                <a sec:authorize="hasAuthority('ADMIN')" class="item"  href="/dashboard">Dashboard</a>
+                <a sec:authorize="isAnonymous()" class="item"  href="/login">Login</a>
+                <a sec:authorize="isAuthenticated()" class="item"  href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="tablet mobile only row">
+        <div class="column">
+            <div class="ui fixed menu navigation">
+                <div class="item">
+                    <img class="ui mini image" th:src="@{/trademark.png}">&nbsp;&nbsp;&nbsp;<span class="header">Sri Lanka Railways</span>
+                </div>
+                <a id="mobile_item" class="item right aligned"><i class="bars icon"></i></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="ui sidebar vertical menu right">
+    <a class="item active" href="#search">Home</a>
+    <a class="item" href="#gallery">Gallery</a>
+    <a class="item" href="#history">History</a>
+    <a class="item" href="#ourService">Over Services</a>
+    <a class="item" href="#content">Contact</a>
+    <a class="item" href="/api">API</a>
+    <a sec:authorize="hasAuthority('ADMIN')" class="item"  href="/dashboard">Dashboard</a>
+    <a sec:authorize="isAnonymous()" class="item"  href="/login">Login</a>
+    <a sec:authorize="isAuthenticated()" class="item"  href="/logout">Logout</a>
+</div>
+
+<div class="slider">
+    <div class="slides">
+        <th:block th:each="i: ${#numbers.sequence(1, 4)}">
+            <div th:replace="../static/comman/slider :: slider(num=${i})"></div>
+        </th:block>
+    </div>
+</div>
+
+<section class="search-rw" id="search">
+    <div class="container-search">
+        <div class="ui grid">
+            <div class="sixteen wide  mobile four wide tablet four wide computer column title-tag">
+                <span class="title">Book Your Seat</span>
+                <h6>You can book both ways</h6>
+            </div>
+
+            <div class="sixteen wide mobile twelve wide tablet twelve wide computer column search">
+                <form class="ui form" action="/reservation" method="POST" role="form" th:object="${reservation}" autocomplete="off">
+                    <div class="three fields">
+                        <div class="field required">
+                            <label>From</label>
+                            <select th:field="*{from}" th:classappend="${#fields.hasErrors('from')}? error" required class="ui search dropdown">
+                                <option value="">From</option>
+                                <option th:each="station : ${stations}" th:value="${station.id}" th:text="${station.name}"></option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('from')}" class="ui basic red pointing prompt label transition visible"
+                                 th:errorclass="error" th:errors="*{from}">
+                                <p th:errors="*{from}"></p>
+                            </div>
+                        </div>
+                        <div class="field required">
+                            <label>To</label>
+                            <select th:field="*{to}" th:classappend="${#fields.hasErrors('to')}? error" required class="ui search dropdown">
+                                <option value="">To</option>
+                                <option th:each="station : ${stations}" th:value="${station.id}" th:text="${station.name}"></option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('to')}" class="ui basic red pointing prompt label transition visible"
+                                 th:errorclass="error" th:errors="*{to}">
+                                <p th:errors="*{to}"></p>
+                            </div>
+                        </div>
+                        <div class="field required">
+                            <label>Date</label>
+                            <div class="ui calendar" id="date">
+                                <div class="ui input left icon">
+                                    <i class="calendar icon"></i>
+                                    <input th:field="*{onewayDate}" th:classappend="${#fields.hasErrors('onewayDate')}? error" required type="text" placeholder="Date">
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('onewayDate')}" class="ui basic red pointing prompt label transition visible"
+                                 th:errorclass="error" th:errors="*{onewayDate}">
+                                <p th:errors="*{onewayDate}"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="three fields">
+                        <div class="field required">
+                            <input th:field="*{passengers}" th:classappend="${#fields.hasErrors('passengers')}? error" required type="text" placeholder="No of Passengers">
+                            <div th:if="${#fields.hasErrors('passengers')}" class="ui basic red pointing prompt label transition visible"
+                                 th:errorclass="error" th:errors="*{passengers}">
+                                <p th:errors="*{passengers}"></p>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label></label>
+                            <div class="ui large toggle checkbox">
+                                <input th:field="*{returnWay}" type="checkbox" id="return" name="public">
+                                <label>Return</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui calendar" id="returnDate">
+                                <div class="ui input left icon">
+                                    <i class="calendar icon"></i>
+                                    <input th:field="*{returnDate}" th:classappend="${#fields.hasErrors('returnDate')}? error" type="text" placeholder="Date">
+                                    <div th:if="${#fields.hasErrors('returnDate')}" class="ui basic red pointing prompt label transition visible"
+                                         th:errorclass="error" th:errors="*{returnDate}">
+                                        <p th:errors="*{returnDate}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="ui wide right aligned">
+                        <button class="ui basic button" type="submit">Search</button>
+                        <button class="ui basic button" type="button" id="reset">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="gallery" class="ui container page-section">
+    <h1 class="ui header">Gallery</h1>
+    <div class="ui three stackable cards">
+        <th:block th:each="i: ${#numbers.sequence(1, 6)}">
+            <div th:replace="../static/comman/slider :: gallery(num=${i})"></div>
+        </th:block>
+    </div>
+</section>
+
+<section id="history" class="ui container page-section">
+    <div class="ui main text">
+        <h1 class="ui header">History</h1>
+        <p>Rail was introduced in Sri Lanka in 1864 to transport coffee from plantations in the hill country district of
+            Kandy to the port city of Colombo on its way to Europe and the world market. The coffee blight of 1871
+            destroyed many a fine plantation and tea replaced coffee. With the development of tea plantations in the
+            1880s, the joint-stock companies swallowed up the former individual proprietorship of the coffee era. Under
+            corporate ownership and management control by companies, the process of production of tea became more
+            sophisticated and needed more and more railways built to the Kandyan highlands. To send tea to Colombo and
+            to transport labour, machinery, manure, rice, and foodstuff, etc to Kandy, another 100 miles of railways
+            were constructed in the tea planting districts to serve the expanding tea domain.</p>
+        <p>To serve the coconut plantations flourishing in the west, southwest and northwest coastal areas of the
+            country, and the wet inland rubber plantations below the tea belt, railway lines were built in the wake of
+            these agricultural developments. Thereafter, the need for cheap and safe travel in order to open up the
+            hinterland of the country led to the expansion of the railway.</p>
+        <p>An extension of the Main Line to Kandy was made north to the ancient city of Anuradhapura, going further
+            north to Kankesanturai and west to Talaimannar to connect the island with South India by ferry, to bring
+            Indian labour for the tea and rubber plantations, and also import rice and other food stuffs not
+            indigenously produced in sufficient quantities.</p>
+        <p>Towards the east, there was little economic justification to lay a line to the dry zone in that direction,
+            but it became strategically worthwhile to lay a line to the natural harbour of Trincomalee and also connect
+            it to the provincial capital of Batticaloa. These lines were laid with light (21 kg) section rails, as was
+            the narrow gauge section to serve the rubber plantations east of Colombo, known as the Kelani Valley
+            Line.</p>
+        <p>Up country, a similar branch line was laid from Nanu Oya on the Main Line through very difficult terrain to
+            serve the tea plantations around Nuwara Eliya. Track alignment was defined in this section about 140 years
+            ago, when economic considerations were vastly different. The railways achieved modal superiority with speeds
+            of 25 to 40 kmph in the hill country and 65 to 80 in the low country. Civil engineering criteria was
+            influenced by the economic need to minimize cuts and fills, permitting gradients to 2 to 3 % and minimizing
+            bridge lengths. As a result, the alignment here is winding with very sharp curves.</p>
+        <p>In the early days of the railways, the bulk of the freight was carried to the port of Colombo and as the port
+            expanded, rail lines were laid to serve every pier.</p>
+    </div>
+</section>
+
+<section id="ourService" class="ui container page-section">
+    <div class="ui main text">
+        <h1 class="ui header">Our Services</h1>
+    </div>
+    <div class="ui three stackable cards">
+        <th:block th:each="service : ${services}">
+            <div th:replace="../static/comman/slider :: services(service=${service})"></div>
+        </th:block>
+    </div>
+</section>
+
+<section th:style="'background: url('+@{/images/Slider/slide-3.jpg}+');'" id="content" class="contact">
+    <div class="contact-content">
+        <div class="ui container page-section">
+            <div class="ui main text">
+                <h1 class="ui header">Contact</h1>
+            </div>
+            <form class="ui form">
+                <h4 class="ui dividing header">Contact Us</h4>
+                <div class="field">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Your Name</label>
+                            <input type="text" placeholder="Enter Name">
+                        </div>
+                        <div class="field">
+                            <label>Your Email</label>
+                            <input type="text" placeholder="Enter Email">
+                            <small class="ui helper text-white text"> We'll never share your email with anyone
+                                else.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Your Contact Number</label>
+                            <input type="text" placeholder="Enter Contact Number" id="phone">
+                        </div>
+                        <div class="field">
+                            <label>Subject</label>
+                            <select class="ui search dropdown">
+                                <option value="">Select Subject</option>
+                                <option value="TI">Technical issue</option>
+                                <option value="PI">Payment Issue</option>
+                                <option value="SC">Support Case</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Message</label>
+                    <textarea type="text" placeholder="Enter here......"></textarea>
+                </div>
+
+                <div class="ui inverted basic button" tabindex="0">Send</div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+<div th:replace="../static/comman/navigation :: footer"></div>
+
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/calendar.min.js}"></script>
+<script th:src="@{/js/jquery.glide.min.js}"></script>
+<script th:src="@{/js/intlTelInput.min.js}"></script>
+<script th:src="@{/js/index.js}"></script>
+</body>
+</html>

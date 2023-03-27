@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Railway Department</title>
+    <link rel="icon" th:href="@{/trademark.png}">
+    <link th:href="@{/css/our.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic.min.css}" rel="stylesheet"/>
+
+</head>
+<body>
+
+<div th:replace="../static/comman/navigation :: topBar"></div>
+
+<div th:replace="../static/comman/navigation :: sideBar"></div>
+
+<div class="mt100"></div>
+
+<section class="ui container p0">
+    <div class="ui mini five steps">
+        <div class="completed step">
+            <i class="home icon"></i>
+            <div class="content">
+                <div class="title">HOME</div>
+            </div>
+        </div>
+        <div class="completed step">
+            <i class="train icon"></i>
+            <div class="content">
+                <div class="title">CHECK AVAILABILITY</div>
+            </div>
+        </div>
+        <div class="completed step">
+            <i class="payment icon"></i>
+            <div class="content">
+                <div class="title">CONFIRMATION & PAYMENT</div>
+            </div>
+        </div>
+        <div class="active step">
+            <i class="users icon"></i>
+            <div class="content">
+                <div class="title">PASSENGER INFORMATION</div>
+            </div>
+        </div>
+        <div class="disabled step">
+            <i class="ticket icon"></i>
+            <div class="content">
+                <div class="title">TICKET SUMMARY</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="mt50"></div>
+
+<section class="ui container">
+    <div class="ui secondary segment">
+        <h1>Payment</h1>
+        <label><b>Train Seat Booking Payment...</b></label>
+        <div class="ui divider"></div>
+        <div class="ui positive message">
+            <div class="header">
+                Payment is Success
+            </div>
+            <p>Go to your next Tab and Print your <b>Ticket</b>.</p>
+        </div>
+    </div>
+</section>
+
+<div class="mt50"></div>
+
+<section class="ui container">
+    <div class="ui secondary segment">
+        <h1>Summary</h1>
+        <div class="ui grid">
+            <div class="sixteen wide mobile eight wide tablet eight wide computer column">
+                <div class="ui raised card border-radius10" style="width: auto">
+                    <div class="ui content middle center aligned">
+                        <div class="header">Forward Train</div>
+                    </div>
+                    <div class="content">
+                        <table class="ui borderless table">
+                            <tr>
+                                <td>Train Name & No</td>
+                                <td th:text="${booking.trainSchedule.train.name}"></td>
+                            </tr>
+                            <tr>
+                                <td>Start Station</td>
+                                <td th:text="${booking.trainSchedule.train.departure.name}"></td>
+                            </tr>
+                            <tr>
+                                <td>End Station</td>
+                                <td th:text="${booking.trainSchedule.train.arrival.name}"></td>
+                            </tr>
+                            <tr>
+                                <td>Departure Date</td>
+                                <td th:text="${#dates.format(booking.trainSchedule.date, 'yyyy-MM-dd')}"></td>
+                            </tr>
+                            <tr>
+                                <td>No of Passengers</td>
+                                <td th:text="${booking.passengers}"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Train Class
+                                    <a class="ui blue label">Selected</a>
+                                </td>
+                                <td th:text="${booking.trainClass.name}"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Price
+                                    <a class="ui blue label">One Person</a>
+                                </td>
+                                <td th:text="${booking.price}">--</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="extra content" style="background-color: #4C4C4C; color: white; border-bottom-right-radius: 10px !important; border-bottom-left-radius: 10px !important;">
+                    <span class="right floated">
+                        <h1 class="header text-white">Total Price - LKR <th:block th:text="${#numbers.formatDecimal((booking.price*booking.passengers), 0, 'COMMA', 2, 'POINT')}"></th:block></h1>
+                    </span>
+                        <span><i class="arrow circle right big icon"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="sixteen wide mobile eight wide tablet eight wide computer column">
+
+                <div class="ui raised card border-radius10" style="width: auto">
+                    <div class="ui content middle center aligned">
+                        <div class="header">User Details</div>
+                    </div>
+                    <div class="content">
+                        <table class="ui borderless table">
+                            <th:block th:unless="${isUser}">
+                                <tr>
+                                    <td>Contact Number</td>
+                                    <td th:text="${booking.contact}"></td>
+                                </tr>
+                            </th:block>
+                            <th:block th:if="${isUser}">
+                                <tr>
+                                    <td>FullName</td>
+                                    <td th:text="${booking.user.title+' . '+booking.user.fname+' '+booking.user.lname}"></td>
+                                </tr>
+
+                                <th:block th:if="${booking.user.nic!=null}">
+                                    <tr>
+                                        <td>NIC</td>
+                                        <td th:text="${booking.user.nic}"></td>
+                                    </tr>
+                                </th:block>
+                                <th:block th:if="${booking.user.passport!=null}">
+                                    <tr>
+                                        <td>NIC</td>
+                                        <td th:text="${booking.user.passport}"></td>
+                                    </tr>
+                                </th:block>
+
+                                <tr>
+                                    <td>Contact Number</td>
+                                    <td th:text="${booking.user.contact}"></td>
+                                </tr>
+
+                                <tr>
+                                    <td>Email</td>
+                                    <td th:text="${booking.user.email}"></td>
+                                </tr>
+
+                            </th:block>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div class="mt50"></div>
+
+<div class="ui blue segment m0">
+    <div class="ui container grid">
+        <div class="twelve wide column">
+            <h1 class="ui header" >
+                Happy Journey
+            </h1>
+        </div>
+        <div class="two wide column"></div>
+        <div class="two wide column">
+            <form method="post" action="/ticketInformation" role="form" th:object="${booking}"
+                  autocomplete="off">
+                <input class="visible-non" th:field="*{id}"/>
+                <button class="ui primary button" type="submit">
+                    Ticket
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="../static/comman/navigation :: footer"></div>
+
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic.min.js}"></script>
+</body>
+</html>

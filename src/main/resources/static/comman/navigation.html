@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    ...
+</head>
+<body>
+
+<div th:fragment="sideNav" class="ui sidebar vertical inverted menu sidebar-menu" id="sidebar">
+    <div class="item">
+        <div class="header nav-text">General</div>
+        <div class="menu">
+            <a class="item" href="/dashboard" th:classappend="${#ctx.springRequestContext.requestUri  == '/dashboard' ? 'active':''}">
+                <div>
+                    <i class="icon tachometer alternate"></i>
+                    Dashboard
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="header nav-text">
+            Train Schedule Management
+        </div>
+        <div class="menu">
+            <a class="item" href="/dashboard/cuTrainSchedule" th:classappend="${#strings.contains(#ctx.springRequestContext.requestUri, '/dashboard/cuTrainSchedule') ? 'active':(#strings.contains(#ctx.springRequestContext.requestUri, '/dashboard/editTrainSchedule')?'active':'')}">
+                <div><i class="icons">
+                    <i class="train icon"></i>
+                    <i class="corner clock icon"></i>
+                </i>Create Train Schedule</div>
+            </a>
+            <a class="item" href="/dashboard/trainScheduleList" th:classappend="${#ctx.springRequestContext.requestUri  == '/dashboard/trainScheduleList' ? 'active':''}">
+                <div>
+                    <i class="icons">
+                        <i class="train icon"></i>
+                        <i class="corner bell icon"></i>
+                    </i>Train Schedule List</div>
+            </a>
+        </div>
+    </div>
+
+    <a href="/dashboard/bookingList" class="item" th:classappend="${#ctx.springRequestContext.requestUri  == '/dashboard/bookingList' ? 'active':''}">
+        <div>
+            <i class="icon ticket alternate"></i>
+            Bookings
+        </div>
+    </a>
+
+    <a class="item" href="/dashboard/subscribersList" th:classappend="${#ctx.springRequestContext.requestUri  == '/dashboard/subscribersList' ? 'active':''}">
+        <div>
+            <i class="icon users"></i>
+            Subscribers
+        </div>
+    </a>
+
+    <div class="item">
+        <div class="header nav-text">
+            Train Management
+        </div>
+        <div class="menu">
+            <a href="/dashboard/cuTrain" class="item"
+               th:classappend="${#ctx.springRequestContext.requestUri  == '/dashboard/cuTrain' ? 'active':(#strings.contains(#ctx.springRequestContext.requestUri, '/dashboard/editTrain')?'active':'')}">
+                <div><i class="icons">
+                    <i class="train icon"></i>
+                    <i class="corner add icon"></i>
+                </i>Create Train</div>
+            </a>
+            <a href="/dashboard/trainList" class="item" th:classappend="${#ctx.springRequestContext.requestUri  == '/dashboard/trainList' ? 'active':''}">
+                <div>
+                    <i class="icons">
+                        <i class="train icon"></i>
+                        <i class="corner tasks icon"></i>
+                    </i>Train List</div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="item">
+        <div class="header nav-text">Other</div>
+        <div class="menu">
+            <a href="#" class="item">
+                <div>
+                    <i class="icon envelope"></i>
+                    Messages
+                </div>
+            </a>
+
+            <a href="#" class="item">
+                <div>
+                    <i class="icon calendar alternate"></i>
+                    Calendar
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<nav th:fragment="topNav" class="ui top fixed menu dash-navigation">
+    <div class="left menu top-back">
+        <a href="#" class="sidebar-menu-toggler item" data-target="#sidebar">
+            <i class="sidebar icon"></i>
+        </a>
+        <a class="header  item" style="padding-top: 7px; padding-left: 5px; padding-bottom: 7px">
+            <img class="ui fluid mini image m0" th:src="@{/trademark.png}">&nbsp;&nbsp;&nbsp;<span class="sub-header top-heading">Sri Lanka Railways</span>
+        </a>
+    </div>
+
+    <div class="right menu">
+        <a href="#" class="item">
+            <i class="bell icon"></i>
+        </a>
+        <div class="ui dropdown item">
+            <i class="user cirlce icon"></i>
+            <div class="menu">
+                <a href="#" class="item">
+                    <i class="info circle icon"></i> Profile</a>
+                <a href="#" class="item">
+                    <i class="wrench icon"></i>
+                    Settings</a >
+                <a href="/logout" class="item">
+                    <i class="sign-out icon"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="ui inverted vertical footer segment" th:fragment="footer">
+    <div class="ui container">
+        <div class="ui stackable inverted equal height stackable grid">
+            <div class="eight wide column">
+                <p th:text="'© '+${#dates.year(#dates.createNow())}+' Sri Lanka Railways (SLR). All rights Reserved Sri Lanka Railways'"></p>
+                <p style="white-space: pre-line">Sri Lanka Railways
+                    Sri Lanka Railways Headquarters,
+                    Colombo 10 , Sri Lanka
+                    Telephones : +94 11 4 600 111</p>
+            </div>
+            <div class="eight wide column">
+                <div class="ui inverted divided middle aligned grid">
+                    <div class="six wide mobile six wide tablet six wide computer right aligned column">Technology
+                        partner
+                    </div>
+                    <div class="five wide column">
+                        <a href="https://hidayasolutions.com/"><img class="ui fluid image"
+                                                                    th:src="@{/images/tp/hidaya-solutions.png}"></a>
+                    </div>
+                    <div class="two wide column">
+                        <a><img class="ui fluid image" th:src="@{/images/tp/EmblemSL.png}"></a>
+                    </div>
+                    <div class="two wide column">
+                        <a><img class="ui fluid image" th:src="@{/trademark.png}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="topBar" class="ui grid">
+    <div class="computer only row">
+        <div class="column">
+            <div class="ui secondary pointing top fixed menu navigation">
+                <div class="item">
+                    <img class="ui mini image" th:src="@{/trademark.png}">&nbsp;&nbsp;&nbsp;<span class="header">Sri Lanka Railways</span>
+                </div>
+                <a class="item right aligned active" href="/index">Home</a>
+                <a sec:authorize="isAnonymous()" class="item" href="/login">Login</a>
+                <a sec:authorize="isAuthenticated()" class="item" href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="tablet mobile only row">
+        <div class="column">
+            <div class="ui fixed menu navigation">
+                <div class="item">
+                    <img class="ui mini image" th:src="@{/trademark.png}">&nbsp;&nbsp;&nbsp;<span class="header">Sri Lanka Railways</span>
+                </div>
+                <a id="mobile_item" class="item right aligned"><i class="bars icon"></i></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="sideBar" class="ui sidebar vertical menu right">
+    <a class="item active" href="/index">Home</a>
+    <a sec:authorize="isAnonymous()" class="item" href="/login">Login</a>
+    <a sec:authorize="isAuthenticated()" class="item" href="/logout">Logout</a>
+</div>
+
+</body>
+</html>

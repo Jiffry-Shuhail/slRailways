@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Railway Department</title>
+    <link rel="icon" th:href="@{/trademark.png}">
+    <link th:href="@{/css/our.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic.min.css}" rel="stylesheet"/>
+    <link href="https://rawgit.com/summerstyle/jsonTreeViewer/master/libs/jsonTree/jsonTree.css" rel="stylesheet" />
+</head>
+<body>
+
+<div th:replace="../static/comman/navigation :: topBar"></div>
+
+<div th:replace="../static/comman/navigation :: sideBar"></div>
+
+<div class="mt100"></div>
+
+<div class="tab header segment">
+    <section class="ui container">
+        <div class="introduction">
+            <h1 class="ui header">API</h1>
+            <p>API allows elements to trigger actions on a server</p>
+            <br>
+        </div>
+    </section>
+</div>
+
+<div class="ui secondary inverted" style="background-color: rgba(226,226,226,0.74)">
+    <div class="ui container white" style="padding: 1%">
+        <h4 class="ui header">Working with named URLs:</h4>
+        <p><b>API</b> works best by defining a "vocabulary" of API actions which interface elements can query. These
+            named URLs are referred to internally as API <b>actions</b>, and make up all the triggerable behaviors on
+            the server.</p>
+        <p>These actions are stored as templated URLs which include templated parameters that can be substituted at
+            run-time.</p>
+        <p>URLs listed in your API can include <b>required parameters</b> and <b>optional parameters</b> which may be
+            adjusted for each call.</p>
+        <h4 class="ui header">Get Stations List</h4>
+        <div class="html ui top attached segment">
+            <div class="ui top attached label">Get Url End Point <a onclick="copyToClipboard('stationsTag')"><i data-content="Copy code" class="copy link icon"></i></a>
+            </div>
+        </div>
+
+        <div class="annotation transition visible">
+            <div class="ui instructive attached segment">
+                <pre><code id="stationsTag">http://localhost:8080/api/reservation/stations</code>
+                </pre>
+            </div>
+        </div>
+
+        <h4 class="ui header">Get Trains</h4>
+        <div class="html ui top attached segment">
+            <div style="margin-top: 20px;margin-bottom: 20px">
+                <label>Use the Url Body Params like These</label>
+            </div>
+            <div id="find" class="wrapper"></div>
+            <div class="ui top attached label">Post Url End Point <a onclick="copyToClipboard('findTag')"><i data-content="Copy code" class="copy link icon"></i></a></div>
+        </div>
+        <div class="annotation transition visible">
+            <div class="ui instructive attached segment">
+                <pre><code id="findTag">http://localhost:8080/api/reservation/find</code>
+                </pre>
+            </div>
+        </div>
+
+        <h4 class="ui header">Booking</h4>
+        <div class="html ui top attached segment">
+            <div style="margin-top: 20px;margin-bottom: 20px">
+                <label>Use the Url Body Params like These</label>
+            </div>
+            <div id="booking" class="wrapper"></div>
+            <div class="ui top attached label">Post Url End Point <a onclick="copyToClipboard('bookTag')"><i data-content="Copy code" class="copy link icon"></i></a></div>
+        </div>
+        <div class="annotation transition visible">
+            <div class="ui instructive attached segment">
+                <pre><code id="bookTag">http://localhost:8080/api/reservation/book</code>
+                </pre>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="../static/comman/navigation :: footer"></div>
+
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic.min.js}"></script>
+<script src="https://rawgit.com/summerstyle/jsonTreeViewer/master/libs/jsonTree/jsonTree.js"></script>
+<script>
+    jsonTree.create({
+        from: "Station Id",
+        to: "Station Id",
+        date: "MMM d, yyyy",
+        passengers: "1"
+    }, document.getElementById("find"));
+
+    jsonTree.create({
+        trainId: "Train Id",
+        classId: "Train Class Id",
+        from: "Station Id",
+        to: "Station Id",
+        contact: "xxxxxxxxx",
+        passengers: "1",
+        description: "optional",
+        name: "Card Name",
+        number: "Card Number",
+        expire: "Expiry Date",
+        csv: "CSV",
+    }, document.getElementById("booking"));
+
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(`#${element}`).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+    }
+</script>
+</body>
+</html>

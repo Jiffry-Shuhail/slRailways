@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Railway Department</title>
+    <link rel="icon" th:href="@{/trademark.png}">
+    <link th:href="@{/css/our.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/calendar.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/dataTables.semanticui.min.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div th:replace="../static/comman/navigation :: sideNav"></div>
+
+<div th:replace="../static/comman/navigation :: topNav"></div>
+
+<div class="pusher">
+    <div class="main-content">
+        <div class="ui grid stackable padded">
+            <div class="sixteen wide computer sixteen wide tablet sixteen wide mobile column">
+                <div class="ui green segment">
+                    <div class="content">
+                        <div class="header">
+                            <div class="ui header">
+                                Train List
+                            </div>
+                        </div>
+                        <div class="description  block clear">
+                            <form class="ui form" action="/dashboard/trainScheduleList" method="post" role="form" th:object="${TrainScheduleListFilter}">
+                                <h4 class="ui dividing header">Filtering Information</h4>
+                                <div class="field">
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>Train</label>
+                                            <select th:field="*{train}" name="train" id="train" class="ui fluid search dropdown">
+                                                <option value="">Train</option>
+                                                <option th:each="train : ${trains}" th:value="${train.id}"
+                                                        th:text="${train.name}"></option>
+                                            </select>
+                                        </div>
+
+                                        <div class="field">
+                                            <label>Class</label>
+                                            <select th:field="*{trainClass}" id="trainClass" class="ui fluid search dropdown">
+                                                <option value="">Class</option>
+                                                <option th:each="cls : ${classes}" th:value="${cls.id}"
+                                                        th:text="${cls.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>From Date</label>
+                                            <div class="ui calendar" id="fromDateDiv">
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    <input th:field="*{fromDate}" type="text" placeholder="Duration">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label>To Date</label>
+                                            <div class="ui calendar" id="toDateDiv">
+                                                <div class="ui input left icon">
+                                                    <i class="calendar icon"></i>
+                                                    <input th:field="*{toDate}" type="text" placeholder="Duration">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="ui dividing header">Location Information</h4>
+                                <div class="field">
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>Departure</label>
+                                            <select th:field="*{departure}" id="departure" name="departure"
+                                                    class="ui fluid search dropdown">
+                                                <option value="">Departure</option>
+                                                <option th:each="station : ${stations}" th:value="${station.id}"
+                                                        th:text="${station.name}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="field">
+                                            <label>Arrival</label>
+                                            <select th:field="*{arrival}" id="arrival" name="arrival"
+                                                    class="ui fluid search dropdown">
+                                                <option value="">Arrival</option>
+                                                <option th:each="station : ${stations}" th:value="${station.id}"
+                                                        th:text="${station.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="ui dividing header">Status and Text Information</h4>
+                                <div class="field">
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <label>Is Active</label>
+                                            <select th:field="*{active}" id="active" name="active"
+                                                    class="ui fluid search dropdown">
+                                                <option value="true" selected>Active</option>
+                                                <option value="false">De Active</option>
+                                            </select>
+                                        </div>
+                                        <div class="field">
+                                            <label>Search</label>
+                                            <div class="ui icon input">
+                                                <input type="text" placeholder="Search" id="search">
+                                                <i class="search icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <h4 class="ui dividing header">Filter List</h4>
+
+                                <div class="field">
+                                    <table class="ui unstackable celled padded scrolling striped table"
+                                           id="filterData" style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th class="four wide">Name</th>
+                                            <th class="two wide">Departure</th>
+                                            <th class="two wide">Arrival</th>
+                                            <th class="four wide">Class</th>
+                                            <th class="three wide">Price</th>
+                                            <th class="one wide">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="tsl, iStat : ${TrainScheduleList}">
+                                            <td th:text="${tsl.train.name}"></td>
+                                            <td th:text="${tsl.train.departure.name}"></td>
+                                            <td th:text="${tsl.train.arrival.name}"></td>
+                                            <td>
+                                                <div class="ui selection list">
+                                                    <a class="item label-item"
+                                                       th:each="classe, index : ${tsl.trainSeatPriceAndAvailabilities}">
+                                                        <div class="ui fluid horizontal label middle left aligned"
+                                                             th:classappend="${index.index==0?'purple':(index.index==1?'violet':'blue')}">
+                                                            <th:block th:text="${classe.trainClass.name}"></th:block>
+                                                            <div class="detail right floated"
+                                                                 th:text="${classe.seats}"></div>
+                                                            <div class="detail right floated" style="background-color: #7fff4e"
+                                                                 th:text="${classe.availability}"></div>
+
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td class="middle right aligned">
+                                                <div class="ui selection list">
+                                                    <a class="item label-item"
+                                                       th:each="classe, index : ${tsl.trainSeatPriceAndAvailabilities}">
+                                                        <div class="ui horizontal label"
+                                                             th:text="'LKR '+${#numbers.formatDecimal(classe.price, 1, 'DEFAULT', 2, 'DEFAULT')}">
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="ui small basic icon buttons" th:if="${tsl.valid}">
+                                                    <a class="ui button" th:href="'/dashboard/editTrainSchedule/'+${tsl.id}"><i class="edit icon"></i></a>
+                                                    <a class="ui button" th:href="${tsl.active} ? '/dashboard/deactivateTrainSchedule/'+${tsl.id} : '/dashboard/activateTrainSchedule/'+${tsl.id}">
+                                                        <i class="icon" th:classappend="${tsl.active}?'trash':'redo'"></i>
+                                                    </a>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="ui divider"></div>
+                                <button type="submit" class="ui right floated positive button" tabindex="0">Submit
+                                </button>
+                                <div style="clear: both"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/calendar.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/dataTables.semanticui.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/dashboard.js}"></script>
+<script type="text/javascript" th:src="@{/js/trainList.js}"></script>
+<script>
+    $('#train').dropdown({clearable: true});
+    $('#trainClass').dropdown({clearable: true});
+    $('.ui.calendar').calendar();
+</script>
+</body>
+</html>

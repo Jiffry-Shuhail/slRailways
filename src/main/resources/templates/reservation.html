@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Railway Department</title>
+    <link rel="icon" th:href="@{/trademark.png}">
+    <link th:href="@{/css/our.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/semantic.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/dataTables.semanticui.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/responsive.semanticui.min.css}" rel="stylesheet"/>
+    <link th:href="@{/semantic/calendar.min.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div th:replace="../static/comman/navigation :: topBar"></div>
+
+<div th:replace="../static/comman/navigation :: sideBar"></div>
+
+<div class="mt100"></div>
+
+<section class="ui container">
+    <div class="ui mini five steps">
+        <div class="completed step">
+            <i class="home icon"></i>
+            <div class="content">
+                <div class="title">HOME</div>
+            </div>
+        </div>
+        <div class="active step">
+            <i class="train icon"></i>
+            <div class="content">
+                <div class="title">CHECK AVAILABILITY</div>
+            </div>
+        </div>
+        <div class="disabled step">
+            <i class="payment icon"></i>
+            <div class="content">
+                <div class="title">CONFIRMATION & PAYMENT</div>
+            </div>
+        </div>
+        <div class="disabled step">
+            <i class="users icon"></i>
+            <div class="content">
+                <div class="title">PASSENGER INFORMATION</div>
+            </div>
+        </div>
+        <div class="disabled step">
+            <i class="ticket icon"></i>
+            <div class="content">
+                <div class="title">TICKET SUMMARY</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="mt50"></div>
+
+<section class="ui container">
+    <div class="ui accordion">
+        <button class="ui secondary button title">
+            Do you want to modify the search?&nbsp;&nbsp;&nbsp;
+            <i class="arrow circle down icon"></i>
+        </button>
+        <div class="content mt50">
+            <div class="ui grid">
+                <div class="sixteen wide column customs-card">
+                    <form class="ui form" action="/reservation" method="POST" role="form" th:object="${reservation}" autocomplete="off">
+                        <div class="three fields">
+                            <div class="field required">
+                                <label>From</label>
+                                <select th:field="*{from}" th:classappend="${#fields.hasErrors('from')}? error" required class="ui search dropdown">
+                                    <option value="">From</option>
+                                    <option th:each="station : ${stations}" th:value="${station.id}" th:text="${station.name}"></option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('from')}" class="ui basic red pointing prompt label transition visible"
+                                     th:errorclass="error" th:errors="*{from}">
+                                    <p th:errors="*{from}"></p>
+                                </div>
+                            </div>
+                            <div class="field required">
+                                <label>To</label>
+                                <select th:field="*{to}" th:classappend="${#fields.hasErrors('to')}? error" required class="ui search dropdown">
+                                    <option value="">To</option>
+                                    <option th:each="station : ${stations}" th:value="${station.id}" th:text="${station.name}"></option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('to')}" class="ui basic red pointing prompt label transition visible"
+                                     th:errorclass="error" th:errors="*{to}">
+                                    <p th:errors="*{to}"></p>
+                                </div>
+                            </div>
+                            <div class="field required">
+                                <label>Date</label>
+                                <div class="ui calendar" id="date">
+                                    <div class="ui input left icon">
+                                        <i class="calendar icon"></i>
+                                        <input th:field="*{onewayDate}" th:classappend="${#fields.hasErrors('onewayDate')}? error" required type="text" placeholder="Date">
+                                    </div>
+                                </div>
+                                <div th:if="${#fields.hasErrors('onewayDate')}" class="ui basic red pointing prompt label transition visible"
+                                     th:errorclass="error" th:errors="*{onewayDate}">
+                                    <p th:errors="*{onewayDate}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="three fields">
+                            <div class="field required">
+                                <input th:field="*{passengers}" th:classappend="${#fields.hasErrors('passengers')}? error" required type="text" placeholder="No of Passengers">
+                                <div th:if="${#fields.hasErrors('passengers')}" class="ui basic red pointing prompt label transition visible"
+                                     th:errorclass="error" th:errors="*{passengers}">
+                                    <p th:errors="*{passengers}"></p>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label></label>
+                                <div class="ui large toggle checkbox">
+                                    <input th:field="*{returnWay}" type="checkbox" id="return" name="public">
+                                    <label>Return</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui calendar" id="returnDate">
+                                    <div class="ui input left icon">
+                                        <i class="calendar icon"></i>
+                                        <input th:field="*{returnDate}" th:classappend="${#fields.hasErrors('returnDate')}? error" type="text" placeholder="Date">
+                                        <div th:if="${#fields.hasErrors('returnDate')}" class="ui basic red pointing prompt label transition visible"
+                                             th:errorclass="error" th:errors="*{returnDate}">
+                                            <p th:errors="*{returnDate}"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="ui wide right aligned">
+                            <button class="ui basic right floated button" type="button" id="reset">Reset</button>
+                            <button class="ui basic right floated button" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="mt50"></div>
+
+<section class="ui container">
+    <div class="ui top attached tabular center aligned menu">
+        <a class="item customs active" data-tab="first">Oneway Train</a>
+        <a th:if="${reservation.returnWay}" class="item customs" data-tab="second">Retain Train</a>
+    </div>
+    <div class="ui bottom attached secondary tab segment active" data-tab="first">
+        <i class="train icon"></i>
+        <span>Train Info</span>
+        <h1 class="ui header">
+            <th:block th:text="${reservation.from.name}"></th:block>
+            <i class="angle right big icon"></i>
+            <th:block th:text="${reservation.to.name}"></th:block>
+        </h1>
+        <span>Date - <th:block th:text="${#dates.format(reservation.onewayDate, 'yyyy-MM-dd')}"></th:block></span><br><br>
+        <label>Select a train and proceed</label><i class="angle right large icon"></i>
+
+        <table class="ui celled table selectable responsive nowrap unstackable"
+               id="filterData" style="width:100%">
+            <thead>
+            <tr>
+                <th class="four wide">Train Name</th>
+                <th class="two wide">Departs</th>
+                <th class="two wide">Arrives</th>
+                <th class="four wide">Class</th>
+                <th class="one wide">Available</th>
+                <th class="three wide">Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tsl, iStat : ${TrainScheduleList}" class="hand-cursor">
+                <td th:text="${tsl.train.name}"></td>
+                <td th:text="${tsl.train.departure.name}"></td>
+                <td th:text="${tsl.train.arrival.name}"></td>
+                <td>
+                    <input class="visible-non" th:value="${tsl.train.id}"/>
+                    <div class="ui selection list">
+                        <a class="item label-item"
+                           th:each="classe, index : ${tsl.trainSeatPriceAndAvailabilities}">
+                            <div class="ui fluid horizontal label middle left aligned"
+                                 th:classappend="${index.index==0?'purple':(index.index==1?'violet':'blue')}">
+                                <th:block th:text="${classe.trainClass.name}"></th:block>
+                                <div class="detail right floated"
+                                     th:text="${classe.seats}"></div>
+                            </div>
+                        </a>
+                    </div>
+                </td>
+                <td class="middle right aligned">
+                    <div class="ui selection list">
+                        <a class="item label-item"
+                           th:each="classe, index : ${tsl.trainSeatPriceAndAvailabilities}">
+                            <div class="ui horizontal label"
+                                 th:text="${classe.availability}">
+                            </div>
+                        </a>
+                    </div>
+                </td>
+                <td class="middle right aligned">
+                    <div class="ui selection list">
+                        <a class="item label-item"
+                           th:each="classe, index : ${tsl.trainSeatPriceAndAvailabilities}">
+                            <div class="ui horizontal label"
+                                 th:text="'LKR '+${#numbers.formatDecimal(classe.price, 1, 'DEFAULT', 2, 'DEFAULT')}">
+                            </div>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${reservation.returnWay}" class="ui bottom attached secondary tab segment" data-tab="second">
+        Second
+    </div>
+</section>
+
+<div class="ui container">
+    <div class="ui warning message transition hidden" id="trainMessage">
+        <i class="close icon"></i>
+        <div class="header">
+            Warning!
+        </div>
+        Please Select the Train
+    </div>
+</div>
+
+<div class="mt50"></div>
+
+<div class="ui blue segment m0">
+    <div class="ui container grid">
+        <div class="twelve wide column">
+            <h1 class="ui header">
+                <th:block th:text="${reservation.from.name}"></th:block>
+                <i class="angle right big icon"></i>
+                <th:block th:text="${reservation.to.name}"></th:block>
+                (Train Selected)
+            </h1>
+        </div>
+        <div class="two wide column"></div>
+        <div class="two wide column">
+            <form method="post"  action="/paymentSummary" role="form" th:object="${reservationProceed}" autocomplete="off">
+                <input class="visible-non" th:field="*{trainSchedule}"/>
+                <input class="visible-non" th:field="*{passengers}"/>
+                <input class="visible-non" th:field="*{trainSchedule}"/>
+                <input class="visible-non" th:field="*{from}"/>
+                <input class="visible-non" th:field="*{to}"/>
+                <div class="ui calendar visible-non">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input th:field="*{onewayDate}" required type="text" placeholder="Date">
+                    </div>
+                </div>
+                <div class="ui calendar visible-non">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input th:field="*{returnDate}" required type="text" placeholder="Date">
+                    </div>
+                </div>
+                <input class="visible-non" th:field="*{returnWay}"/>
+                <input class="visible-non" th:field="*{home}"/>
+                <input class="visible-non" th:field="*{trainClass}"/>
+                <input class="visible-non" th:field="*{passengers}"/>
+                <input class="visible-non" th:field="*{contact}"/>
+                <button class="ui primary button" type="submit">
+                    Proceed
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="../static/comman/navigation :: footer"></div>
+
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/semantic.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/calendar.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/dataTables.semanticui.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/dataTables.responsive.min.js}"></script>
+<script type="text/javascript" th:src="@{/semantic/responsive.semanticui.min.js}"></script>
+<script th:src="@{/js/intlTelInput.min.js}"></script>
+<script th:src="@{/js/reservation.js}"></script>
+</body>
+</html>
